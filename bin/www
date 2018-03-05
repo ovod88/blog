@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('loginsystem:server');
 var http = require('http');
+var MongoClient = require('mongodb').MongoClient,
+    config = require('config');
 
 /**
  * Get port from environment and store in Express.
@@ -25,9 +27,18 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+
+MongoClient.connect(config.mongodb, (err, client) => {
+  if(err) throw err;
+  
+  console.log("Connected successfully to server");
+
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+  app.set('db_blog', client.db('mongodb_course'));
+
+});
 
 /**
  * Normalize a port into a number, string, or false.
