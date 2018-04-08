@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>SignUp</title>
+    <style type="text/css">
+      .label {text-align: right}
+      .error {color: red}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script>
+        $( function () {
+
+            function checkEmail (value) {
+
+                let regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                return value.match(regExp) ? true : false;
+
+            }
+
+            function showError(input, message) {
+
+                let error = input.parent().next('.error');
+
+                error.stop().html(message).fadeIn(600, function() {
+                        $(this).delay(3000).fadeOut(600, function() {
+                            $(this).text('');
+                            $('.btn').on('click', clickHandler);
+                        });
+                });
+
+            }
+
+            function clickHandler(el) {
+     
+                let inputs = $('.input'),
+                    isAtLeastOneEmpty = false;
+
+                $('.btn').off('click');
+                el.preventDefault();
+
+                inputs.each(function() {
+
+                    console.log('LOOP');
+
+                    if($(this).val().trim().length === 0) {
+
+                        showError($(this), 'Please enter a value');
+                        isAtLeastOneEmpty = true;
+                        return true;
+
+                    }
+
+                    if ($(this).is('.email') && $(this).val().trim().length > 0) {
+
+                        if (!checkEmail($(this).val().trim())) {
+
+
+                            console.log('EMAIL');
+                            showError($(this), 'Please enter correct email');
+                            isAtLeastOneEmpty = true;
+                            return true;
+
+                        }
+
+                    }
+
+                });
+                
+                console.log(isAtLeastOneEmpty);
+
+                if(!isAtLeastOneEmpty) {
+                    $('.btn').submit();
+                    $('.btn').on('click', clickHandler);
+                }
+
+            }
+
+        });
+    </script>
+
+  </head>
+
+  <body>
+    Already a user? <a href="/login">Login</a><p>
+    <h2>SignUp</h2>
+    <form method="post">
+      <table>
+        <tr>
+          <td class="label">
+            Username
+          </td>
+          <td>
+            <input type="text" name="username" class="input" required value=<%- username %> >
+          </td>
+          <td class="error">
+            <%- user_error%>
+          </td>
+        </tr>
+        <tr>
+            <td class="label">
+                Password
+            </td>
+            <td>
+                <input type="password" name="password" class="input" value="" required>
+            </td>
+            <td class="error">
+                <%- password_error%>
+            </td>
+        </tr>
+        <tr>
+                <td class="label">
+                  Repeat Password
+                </td>
+                <td>
+                  <input type="password" name="repeat_password" class="input" value="" required>
+                </td>
+                <td class="error">
+                  <%- password_repeat_error%>
+                </td>
+        </tr>
+        <tr>
+                <td class="label">
+                  Email
+                </td>
+                <td>
+                  <input type="email" name="email" class="input email" value="" required>
+                </td>
+                <td class="error">
+                  <%- email_error%>
+                </td>
+        </tr>
+              
+      </table>
+
+      <input value="Send" class="btn" type="submit" onClick="return false;">
+    </form>
+  </body>
+
+</html>

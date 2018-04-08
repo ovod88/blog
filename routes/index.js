@@ -1,12 +1,31 @@
-var express = require('express');
-var request  = require('request');
-var router = express.Router();
+let ContentController = require('./contentController'),
+    SessionController = require('./sessionController');
+
+module.exports = (app) => {
+  let contentController = new ContentController(),
+      sessionController = new SessionController();
+
+  app.use(sessionController.isUser);
+  
+  app.get('/', contentController.get);
+
+  app.get('/login', sessionController.getLoginPage);
+
+
+
+  app.get('/signup', sessionController.getSignUpPage);
+  app.post('/signup', sessionController.signUpUser);
+
+};
+
+
+
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  var query = {'name': 'Cake'};
-  var projection = {'batters.batter.0': 1, '_id': 0};
-  var operator = {'$set' : {'ppu': 0.65}};
+// router.get('/', function(req, res, next) {
+//   var query = {'name': 'Cake'};
+//   var projection = {'batters.batter.0': 1, '_id': 0};
+//   var operator = {'$set' : {'ppu': 0.65}};
   // request('https://www.reddit.com/r/technology/.json', function(err, resp, body) {
   //   if(!err && resp.statusCode == 200) {
   //     var obj = JSON.parse(body);
@@ -20,7 +39,7 @@ router.get('/', function(req, res, next) {
 
   //       res.json(data);
   //     });
-  //   }
+  //   }  
   // });
   // req.app.get('db_blog').collection('hello_message').findOne({}, function(err, doc) {
   //   if(err) throw err;
@@ -58,6 +77,6 @@ router.get('/', function(req, res, next) {
   
   //       res.send('Updated ' + updated);
   //     });
-});
+// });
 
-module.exports = router;
+// module.exports = router;
