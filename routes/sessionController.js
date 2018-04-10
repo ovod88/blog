@@ -1,21 +1,42 @@
-let UsersDAO = require('../db/users');
+let UsersDAO = require('../db/users'),
+    SessionsDAO = require('../db/sessions');
 
 class SessionController {
     constructor(app) {
+
         this.signUpUser = this.signUpUser.bind(this);
+        this.isUser = this.isUser.bind(this);
         // console.log('++++++++++++++ ');
         // console.log(app.settings);
         this._usersDAO = new UsersDAO(app.get('db_blog'));
+        this._sessionsDAO = new SessionsDAO(app.get('db_blog'));
+
     }
 
     isUser(req, res, next) {
         
         res.locals.user = null;
-        //TODO Check is there is cookie and session already
 
+        // console.log('SESSION CHECKER CALLED +++++++++++++++++++++++=');
+        // console.log(req.cookies.session);
+        let session_id = req.cookies.session;
 
-
-        next();
+        if( session_id ) {
+            // console.log('RETURNS TRUE');
+            this._sessionsDAO.getUserBySessionId(session_id, function(err, username) {
+                // console.log('RETURNS INSIDE');
+                if(err) next(err);
+                // console.log('USERNAME ' + username);
+                if(username) {
+                    // console.log('INSIDE');
+                    res.locals.user = username;
+                    // console.log(res.locals);
+                }
+                next();
+            }); 
+        }
+        // console.log('ÁFTER CHECKER++++++++++++ ');
+        // console.log(res.locals);
     }
 
     getLoginPage(req, res, next) {
@@ -36,7 +57,8 @@ class SessionController {
             username = req.body.username,
             password = req.body.password,
             repeat_password = req.body.repeat_password,
-            errors = {'username': username, 'email': email};
+            errors = {'username': username, 'email': email},
+            that = this;
 
         // console.log(this);
 
@@ -53,11 +75,19 @@ class SessionController {
                         errors['username_error'] = 'Cant save this username';
 
                     }
-                    res.render('signup', errors);
+                    return res.render('signup', errors);
 
                 } else {
 
-                    res.redirect('/');
+                    // console.log(this);
+                    that._sessionsDAO.startSession(username, function(err, session_id) {
+
+                        if (err) return next(err);
+
+                        res.cookie('session', session_id);
+                        res.redirect('/');
+
+                    });
 
                 }
 

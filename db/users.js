@@ -13,7 +13,7 @@ class UsersDAO {
         this._users.insert(user, function(err, inserted) {
             if(err) callback(err);
 
-            console.log(inserted);
+            // console.log(inserted);
             callback();
 
         });
