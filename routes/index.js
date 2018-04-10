@@ -2,8 +2,8 @@ let ContentController = require('./contentController'),
     SessionController = require('./sessionController');
 
 module.exports = (app) => {
-  let contentController = new ContentController(),
-      sessionController = new SessionController();
+  let contentController = new ContentController(app),
+      sessionController = new SessionController(app);
 
   app.use(sessionController.isUser);
   

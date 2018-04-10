@@ -23,11 +23,11 @@
             function showError(input, message) {
 
                 let error = input.parent().next('.error');
-
-                error.stop().html(message).fadeIn(600, function() {
-                        $(this).delay(3000).fadeOut(600, function() {
+                
+                error.html('').hide().clearQueue();
+                error.html(message).fadeIn(600, function() {
+                        $(this).delay(5000).fadeOut(600, function() {
                             $(this).text('');
-                            $('.btn').on('click', clickHandler);
                         });
                 });
 
@@ -38,8 +38,10 @@
                 let inputs = $('.input'),
                     isAtLeastOneEmpty = false;
 
-                $('.btn').off('click');
-                el.preventDefault();
+                // $('.btn').off('click', clickHandler);
+                // el.preventDefault();
+
+                // console.log('Clicked');
 
                 inputs.each(function() {
 
@@ -58,7 +60,7 @@
                         if (!checkEmail($(this).val().trim())) {
 
 
-                            console.log('EMAIL');
+                //             console.log('EMAIL');
                             showError($(this), 'Please enter correct email');
                             isAtLeastOneEmpty = true;
                             return true;
@@ -66,17 +68,20 @@
                         }
 
                     }
-
+                    // console.log('END LOOP');
                 });
                 
-                console.log(isAtLeastOneEmpty);
+                // console.log(isAtLeastOneEmpty);
 
-                if(!isAtLeastOneEmpty) {
-                    $('.btn').submit();
-                    $('.btn').on('click', clickHandler);
+                if(isAtLeastOneEmpty) {
+                    el.preventDefault();
+                    // console.log('PREVENTED');
+                //     $('.btn').on('click', clickHandler);
                 }
 
             }
+            
+            $('.btn').on('click', clickHandler);
 
         });
     </script>
@@ -86,7 +91,7 @@
   <body>
     Already a user? <a href="/login">Login</a><p>
     <h2>SignUp</h2>
-    <form method="post">
+    <form method="post" novalidate>
       <table>
         <tr>
           <td class="label">
@@ -96,7 +101,7 @@
             <input type="text" name="username" class="input" required value=<%- username %> >
           </td>
           <td class="error">
-            <%- user_error%>
+            <%- username_error%>
           </td>
         </tr>
         <tr>
@@ -126,7 +131,7 @@
                   Email
                 </td>
                 <td>
-                  <input type="email" name="email" class="input email" value="" required>
+                  <input type="email" name="email" class="input email" required value=<%- email %>>
                 </td>
                 <td class="error">
                   <%- email_error%>
@@ -135,7 +140,7 @@
               
       </table>
 
-      <input value="Send" class="btn" type="submit" onClick="return false;">
+      <input value="Send" class="btn" type="submit">
     </form>
   </body>
 
