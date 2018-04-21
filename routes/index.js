@@ -16,6 +16,10 @@ module.exports = (app) => {
   app.get('/signup', sessionController.getSignUpPage);
   app.post('/signup', sessionController.signUpUser);
 
+  app.get('/newpost', contentController.renderPostPage);
+  // app.get('/newpost/:title', contentController.renderPostPage);
+  app.post('/newpost', contentController.addPost);
+
 };
 
 

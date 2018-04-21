@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Create a new post</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+        <% if (user) { %>
+            <p>Welcome <%= user %> <a href="/logout">Logout</a></p> 
+        <% } else { %>
+            <p>You are not logged in! <a href="/login">Login</a> | <a href="/signup">Sign Up</a></p>
+        <% } %>
+        <a href="/">Blog Home</a><br><br>
+
+        <% if (user) { %>
+            <form action="/newpost" method="POST">
+                <h2>Title</h2>
+                <input type="text" name="title" size="120"  value="<%= content.title %>">
+                <em class="error"><%= error.title %></em>
+                <h2>Blog Entry<h2>
+                <textarea name="body" cols="120" rows="20" ><%= content.body %></textarea>
+                <em class="error"><%= error.body %></em>
+                <h2>Tags</h2>
+                Comma separated, please<br>
+                <input type="text" name="tags" size="120" value="<%= content.tags%>"><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        <% } %>
+    </body>
+</html>

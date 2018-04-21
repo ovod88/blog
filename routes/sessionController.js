@@ -18,7 +18,7 @@ class SessionController {
         res.locals.user = null;
 
         // console.log('SESSION CHECKER CALLED +++++++++++++++++++++++=');
-        // console.log(req.cookies.session);
+        console.log(req.cookies.session);
         let session_id = req.cookies.session;
 
         if( session_id ) {
@@ -34,6 +34,8 @@ class SessionController {
                 }
                 next();
             }); 
+        } else {
+            next();
         }
         // console.log('ÁFTER CHECKER++++++++++++ ');
         // console.log(res.locals);
