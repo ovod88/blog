@@ -1,30 +1,49 @@
-<!DOCTYPE html>
-<html>
+<!doctype HTML>
+<html
     <head>
-        <title>Create a new post</title>
-        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <title>
+            Blog Post
+        </title>
     </head>
     <body>
         <% if (user) { %>
-            <p>Welcome <%= user %> <a href="/logout">Logout</a></p> 
+            <p>Welcome <%= user %> <a href="/logout">Logout</a> | <a href="/newpost">New Post</a></p> 
         <% } else { %>
-            <p>You are not logged in! <a href="/login">Login</a> | <a href="/signup">Sign Up</a></p>
+            <p>You are not logged in! <a href="/login">Login</a></p>
         <% } %>
         <a href="/">Blog Home</a><br><br>
 
-        <% if (user) { %>
-            <form action="/newpost" method="POST">
-                <h2>Title</h2>
-                <input type="text" name="title" size="120"  value="<%= content.title %>">
+        <h2><%= title %></h2>
+            Posted <%= date %><i> By <%= author %></i><br>
+        <hr>
+            <%= body %>
+        <p>
+        <em>Filed Under</em>:
+            <% for(let i = 0; i < tags.length; i++ { %>
+                <p><%= tags[i]%></p>
+            <% } %>
+        <p>
+            Comments:
+        <ul>
+            <% for(let i = 0; i < comments.length; i++ { %>
+                <p><%= comments[i].author %></p><br>
+                <%= comments[i].comment %>
+            <% } %>
+            <hr>
+            <h3>Add a comment</h3>
+            <form action="/newcomment" method="POST">
+                <h2>Name</h2>
+                <input type="text" name="commentTitle" size="120"  value="<%= comment.title %>">
                 <em class="error"><%= error.title %></em>
-                <h2>Blog Entry<h2>
-                <textarea name="body" cols="120" rows="20" ><%= content.body %></textarea>
-                <em class="error"><%= error.body %></em>
-                <h2>Tags</h2>
-                Comma separated, please<br>
-                <input type="text" name="tags" size="120" value="<%= content.tags%>"><br><br>
+                <h2>Email<h2>
+                <input type="email" name="email" class="input email" required value=<%- comment.email %>>
+                <em class="error"><%= error.email %></em>
+                <h2>Comment</h2>
+                <textarea name="commentBody" cols="120" rows="20" ><%= comment.body %></textarea><br><br>
                 <input type="submit" value="Submit">
             </form>
-        <% } %>
+        </ul>
     </body>
 </html>
+
+

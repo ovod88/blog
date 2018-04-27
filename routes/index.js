@@ -20,6 +20,8 @@ module.exports = (app) => {
   // app.get('/newpost/:title', contentController.renderPostPage);
   app.post('/newpost', contentController.addPost);
 
+  app.get('/posts/:post_title', contentController.renderPostByTitle);
+
 };
 
 

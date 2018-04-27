@@ -74,7 +74,7 @@ class SessionController {
 
                     } else {
 
-                        errors['username_error'] = 'Cant save this username';
+                        errors['username_error'] = 'Can\'t save this username';
 
                     }
                     return res.render('signup', errors);
