@@ -4,6 +4,7 @@
         <title>
             Blog Post
         </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
         <% if (user) { %>
@@ -16,34 +17,83 @@
         <h2><%= title %></h2>
             Posted <%= date %><i> By <%= author %></i><br>
         <hr>
-            <%= body %>
+        <%= body %>
         <p>
-        <em>Filed Under</em>:
-            <% for(let i = 0; i < tags.length; i++ { %>
-                <p><%= tags[i]%></p>
-            <% } %>
+        <em>Filed Under</em>
+        <% for(let i = 0; i < tags.length-1; i++) { %>
+            <%= tags[i]%>,
+        <% } %>
+        <%= tags[tags.length-1] %>
+        </p>
         <p>
             Comments:
-        <ul>
-            <% for(let i = 0; i < comments.length; i++ { %>
-                <p><%= comments[i].author %></p><br>
-                <%= comments[i].comment %>
+        </p>
+        <ul class="comment_list">
+            <% for(let i = 0; i < comments.length; i++) { %>
+                <li>
+                    <p>Author: <%= comments[i].author %></p>
+                    <p>Email: <%= comments[i].email %></p>
+                    <p>Comment: <%= comments[i].comment %></p>
+                </li>
             <% } %>
-            <hr>
-            <h3>Add a comment</h3>
-            <form action="/newcomment" method="POST">
-                <h2>Name</h2>
-                <input type="text" name="commentTitle" size="120"  value="<%= comment.title %>">
-                <em class="error"><%= error.title %></em>
-                <h2>Email<h2>
-                <input type="email" name="email" class="input email" required value=<%- comment.email %>>
-                <em class="error"><%= error.email %></em>
-                <h2>Comment</h2>
-                <textarea name="commentBody" cols="120" rows="20" ><%= comment.body %></textarea><br><br>
-                <input type="submit" value="Submit">
-            </form>
         </ul>
+        <hr>
+        <h3>Add a comment</h3><em class="comment_error" style="color: red; font-style: normal"></em>
+        <form id='comment' action="<%= post_title %>/newcomment" method="POST">
+            <input type="hidden" name="post_title", value="<%= post_title %>">
+            <h2>Author</h2>
+            <input type="text" name="comment_author" required size="120">
+            <h2>Email (Optional)<h2>
+            <input type="email" name="comment_email" class="input email">
+            <h2>Comment</h2>
+            <textarea name="comment_comment" required cols="120" rows="20" ></textarea><br><br>
+            <input type="submit" value="Submit" id='commentSubmit'>
+        </form>
+        <script>
+            $(function() {
+
+                $('#commentSubmit').on('click', function (e) {
+
+                    let $form = $('#comment'),
+                        formData = $form.serialize(),
+                        $list = $('.comment_list');
+
+                    $('.comment_error').text('');
+
+                    e.preventDefault();
+                
+                    $.ajax({
+                        url      : $form.find('input[name=post_title]').val() + "/newcomment",
+                        method   : "POST",
+                        data     : formData,
+                        dataType : "text"
+                    }).then(function (comment){
+
+                        let com = JSON.parse(comment);
+                        
+                        if(!$.isEmptyObject(com)) {
+
+                            $list.append(`<li>
+                                <p>Author: ${com.author}</p>
+                                <p>Email: ${com.email}</p>
+                                <p>Comment: ${com.comment}</p>
+                            </li>`);
+
+                        } else {
+
+                            $('.comment_error').text('Such comment already exists');
+
+                        }
+
+                    },
+                    function (errorXHR) {
+
+                        $('.comment_error').text(errorXHR.responseText);
+
+                    });
+                });
+            });
+        
+        </script>
     </body>
 </html>
-
-

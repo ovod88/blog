@@ -24,7 +24,30 @@ class PostsDAO {
 
             callback(null, post);
 
-        })
+        });
+
+    }
+
+    addCommentToPost(comment, callback) {
+
+        let which_post = {'post_title': comment.post_title},
+            what_to_add = { $addToSet: { 'comments' : {
+                                        'author': comment.author, 
+                                        'email': comment.email,
+                                        'comment': comment.comment
+                                    }
+                            }
+            };
+
+        this._posts.update(which_post, what_to_add, function(err, result) {
+
+            if(err) callback(err);
+
+            if(!result.result.ok) callback(null, { found: 0 });
+
+            callback(null, {found: result.result.ok, updated: result.result.nModified});
+
+        });
 
     }
 }

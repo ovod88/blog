@@ -21,6 +21,7 @@ module.exports = (app) => {
   app.post('/newpost', contentController.addPost);
 
   app.get('/posts/:post_title', contentController.renderPostByTitle);
+  app.post('/posts/:post_title/newcomment', contentController.addComment);
 
 };
 

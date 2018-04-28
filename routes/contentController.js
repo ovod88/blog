@@ -5,6 +5,8 @@ class ContentController {
     constructor(app) {
 
         this.addPost = this.addPost.bind(this);
+        this.addComment = this.addComment.bind(this);
+        this.renderPostByTitle = this.renderPostByTitle.bind(this);
         this._postsDAO = new PostsDAO(app.get('db_blog'));
 
     }
@@ -96,6 +98,52 @@ class ContentController {
                 res.render('post', post);
             } else {
                 res.render('post', {});
+            }
+
+        });
+
+    }
+
+    addComment(req, res, next) {
+
+        let post_title = req.body.post_title,
+            author = req.body.comment_author,
+            email = req.body.comment_email,
+            comment = req.body.comment_comment;
+        
+        if (res.locals.user) {
+            
+            author = res.locals.user;
+
+        }
+        if(!author || !comment) {
+
+            return res.status(500).send('Some fields are empty');
+
+        }
+        
+        this._postsDAO.addCommentToPost({
+            post_title: post_title,
+            author: author,
+            email: email,
+            comment: comment
+        }, function(err, post) {
+
+            if(err) next(err);
+
+            if(!post.found) {
+                
+                return res.status(500).send('No posts were found for this comment');
+                
+            }
+            if(post.found && post.updated) {
+                return res.json({
+                    author: author,
+                    email: email,
+                    comment: comment
+                });
+            } else {
+                return res.json({});
             }
 
         });
