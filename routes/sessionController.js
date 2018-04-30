@@ -5,6 +5,8 @@ class SessionController {
     constructor(app) {
 
         this.signUpUser = this.signUpUser.bind(this);
+        this.getLogoutPage = this.getLogoutPage.bind(this);
+        this.loginUser = this.loginUser.bind(this);
         this.isUser = this.isUser.bind(this);
         // console.log('++++++++++++++ ');
         // console.log(app.settings);
@@ -44,6 +46,55 @@ class SessionController {
     getLoginPage(req, res, next) {
 
         res.render('login', {username: "", login_error:""});
+
+    }
+
+    loginUser(req, res, next) {
+
+        let username = req.body.username,
+            password = req.body.password,
+            that = this;
+
+        this._usersDAO.validateLogin(username, password, function(err, user) {
+
+            if (err) {
+                if (err.no_such_user) {
+                    return res.render("login", {username:username, password:"", login_error:"No such user"});
+                }
+                else if (err.invalid_password) {
+                    return res.render("login", {username:username, password:"", login_error:"Invalid password"});
+                }
+                else {
+                    return next(err);
+                }
+            }
+
+            that._sessionsDAO.startSession(user['_id'], function(err, session_id) {
+
+                if (err) return next(err);
+
+                res.cookie('session', session_id);
+
+                return res.redirect('/');
+
+            });
+
+        });
+
+    }
+
+    getLogoutPage(req, res, next) {
+
+        let session_id = req.cookies.session;
+
+        this._sessionsDAO.endSession(session_id, function (err) {
+            
+            if(err) return next(err);
+
+            res.clearCookie('session');
+
+            return res.redirect('/');
+        });
 
     }
 

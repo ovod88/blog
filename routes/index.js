@@ -11,6 +11,8 @@ module.exports = (app) => {
   app.get('/tag/:tag', contentController.getByTag);
 
   app.get('/login', sessionController.getLoginPage);
+  app.post('/login', sessionController.loginUser);
+  app.get('/logout', sessionController.getLogoutPage);
 
   app.get('/signup', sessionController.getSignUpPage);
   app.post('/signup', sessionController.signUpUser);

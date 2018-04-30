@@ -17,6 +17,16 @@ class SessionsDAO {
             });
     }
 
+    endSession(session_id, callback) {
+
+        this._sessions.remove({ '_id' : session_id }, function (err, numRemoved) {
+
+            callback(err);
+            
+        });
+
+    }
+
     getUserBySessionId(session_id, callback) {
 
         this._sessions.findOne({'_id': session_id}, function(err, session) {
