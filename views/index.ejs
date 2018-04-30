@@ -24,9 +24,9 @@
       <p>
         <em>Filed Under</em>
         <% for(let i = 0; i < post.tags.length-1; i++) { %>
-            <%= post.tags[i]%>,
+            <a href="/tag/<%= post.tags[i]%>"><%= post.tags[i]%></a>,
         <% } %>
-        <%= post.tags[post.tags.length-1] %>
+        <a href="/tag/<%= post.tags[post.tags.length-1]%>"><%= post.tags[post.tags.length-1] %></a>
       </p>
       <p>
         Comments:

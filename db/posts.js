@@ -28,6 +28,21 @@ class PostsDAO {
 
     }
 
+    getPostByTag(tag, callback) {
+
+        console.log(tag);
+
+        this._posts.find({"tags": tag}).project({'_id': 0}).toArray(function(err, posts) {
+
+            if(err) return callback(err);
+            console.log(posts);
+
+            callback(null, posts);
+
+        }); 
+
+    }
+
     getPostByUsername(username, callback) {
 
         this._posts.find(username ? {"author": username} : {}).project({'_id': 0}).toArray(function(err, posts) {

@@ -8,6 +8,7 @@ module.exports = (app) => {
   app.use(sessionController.isUser);
   
   app.get('/', contentController.get);
+  app.get('/tag/:tag', contentController.getByTag);
 
   app.get('/login', sessionController.getLoginPage);
 

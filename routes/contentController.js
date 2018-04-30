@@ -6,6 +6,7 @@ class ContentController {
 
         this.addPost = this.addPost.bind(this);
         this.get = this.get.bind(this);
+        this.getByTag = this.getByTag.bind(this);
         this.addComment = this.addComment.bind(this);
         this.renderPostByTitle = this.renderPostByTitle.bind(this);
         this._postsDAO = new PostsDAO(app.get('db_blog'));
@@ -15,6 +16,23 @@ class ContentController {
     get (req, res, next) {
 
         this._postsDAO.getPostByUsername(res.locals.user, function(err, posts) {
+
+            if(err) next(err);
+
+            // console.log(posts);
+
+            return res.render('index', {
+                'title': 'My Blog',
+                'posts': posts
+            });
+
+        });
+
+    }
+
+    getByTag(req, res, next) {
+
+        this._postsDAO.getPostByTag((req.params.tag).trim(), function(err, posts) {
 
             if(err) next(err);
 
@@ -46,7 +64,7 @@ class ContentController {
             tags_array = string.split(',');
 
         for (let i = 0; i < tags_array.length; i++) {
-            tags.add(tags_array[i]);
+            tags.add(tags_array[i].trim());
         }
 
         return [...tags];
