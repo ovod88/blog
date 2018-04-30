@@ -104,7 +104,7 @@ class SessionController {
 
         } else {
 
-            res.render('signup', errors);
+            return res.render('signup', errors);
 
         }
 

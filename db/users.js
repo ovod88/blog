@@ -11,10 +11,11 @@ class UsersDAO {
             user = {'_id': username, 'password': hash, 'email': email};
 
         this._users.insert(user, function(err, inserted) {
-            if(err) callback(err);
+
+            if(err) return callback(err);
 
             // console.log(inserted);
-            callback();
+            callback(null);
 
         });
     }
