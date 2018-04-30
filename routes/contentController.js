@@ -68,7 +68,8 @@ class ContentController {
         post_title = title.replace( /\s/g, '_' );
         post_title = post_title.replace( /\W/g, '' );
 
-        post_body = sanitize.escape(body.replace(/\r?\n/g,'<br>'));
+        post_body = sanitize.escape(body);
+        post_body = post_body.replace(/\r?\n/g,'<br>');
 
         post_tags = this._getTagsArray(tags);
 
