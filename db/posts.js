@@ -28,6 +28,18 @@ class PostsDAO {
 
     }
 
+    getPostByUsername(username, callback) {
+
+        this._posts.find(username ? {"author": username} : {}).project({'_id': 0}).toArray(function(err, posts) {
+
+            if(err) return callback(err);
+
+            callback(null, posts);
+
+        });
+
+    }
+
     addCommentToPost(comment, callback) {
 
         let which_post = {'post_title': comment.post_title},

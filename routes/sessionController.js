@@ -65,9 +65,14 @@ class SessionController {
         // console.log(this);
 
         if(this.newClientIsOk(username, password, repeat_password, email, errors)) {
+
+            console.log('CALLED' + '#######################################');
             
             this._usersDAO.addUser(username, password, email, function(err) {
+
+                console.log(err);
                 if(err) {
+                    console.log('ERROR');
                     if( err.code === 11000 ) {
 
                         errors['username_error'] = 'Such username is used already';
@@ -77,6 +82,7 @@ class SessionController {
                         errors['username_error'] = 'Can\'t save this username';
 
                     }
+
                     return res.render('signup', errors);
 
                 } else {
@@ -85,6 +91,7 @@ class SessionController {
                     that._sessionsDAO.startSession(username, function(err, session_id) {
 
                         if (err) return next(err);
+                        console.log('AFTER');
 
                         res.cookie('session', session_id);
                         res.redirect('/');

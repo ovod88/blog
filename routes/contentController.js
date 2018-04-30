@@ -5,6 +5,7 @@ class ContentController {
     constructor(app) {
 
         this.addPost = this.addPost.bind(this);
+        this.get = this.get.bind(this);
         this.addComment = this.addComment.bind(this);
         this.renderPostByTitle = this.renderPostByTitle.bind(this);
         this._postsDAO = new PostsDAO(app.get('db_blog'));
@@ -13,10 +14,17 @@ class ContentController {
 
     get (req, res, next) {
 
+        this._postsDAO.getPostByUsername(res.locals.user, function(err, posts) {
 
-        // console.log(res.locals);
-        res.render('index', {
-            'title': 'My Blog'
+            if(err) next(err);
+
+            // console.log(posts);
+
+            return res.render('index', {
+                'title': 'My Blog',
+                'posts': posts
+            });
+
         });
 
     }

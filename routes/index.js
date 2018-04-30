@@ -11,8 +11,6 @@ module.exports = (app) => {
 
   app.get('/login', sessionController.getLoginPage);
 
-
-
   app.get('/signup', sessionController.getSignUpPage);
   app.post('/signup', sessionController.signUpUser);
 

@@ -3,6 +3,7 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </head>
   <body>
     <% if (user) { %>
@@ -11,5 +12,42 @@
       <p>You are not logged in! <a href="/login">Login</a> | <a href="/signup">Sign Up</a></p>
     <% } %>
     <p>Welcome to <%= title %></p>
+
+    <% for ( let i = 0; i < posts.length; i++ ) { %>
+
+      <% let post = posts[i]; %>
+      
+      <h2><%= post.title %></h2>
+        Posted <%= post.date %><i> By <%= post.author %></i><br>
+      <hr>
+      <%- post.body %>
+      <p>
+        <em>Filed Under</em>
+        <% for(let i = 0; i < post.tags.length-1; i++) { %>
+            <%= post.tags[i]%>,
+        <% } %>
+        <%= post.tags[post.tags.length-1] %>
+      </p>
+      <p>
+        Comments:
+      </p>
+      <ul class="comment_list">
+        <% for(let i = 0; i < post.comments.length; i++) { %>
+            <li>
+                <p>Author: <%= post.comments[i].author %></p>
+                <p>Email: <%= post.comments[i].email %></p>
+                <p>Comment: <%= post.comments[i].comment %></p>
+            </li>
+        <% } %>
+      </ul>
+      <hr style="display: block;
+                  height: 1px;
+                  border: 0;
+                  border-top: 3px solid green;
+                  margin: 1em 0;
+                  padding: 0; ">
+
+    <% } %>
+
   </body>
 </html>
